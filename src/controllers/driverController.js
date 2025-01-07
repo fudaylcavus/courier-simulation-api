@@ -52,16 +52,59 @@ async function getCourier(req, res) {
     return res.status(404).json({ error: "Driver not found" });
   }
 
-  const currentPosition = calculateCurrentPosition(
-    driver.route,
-    driver.startTime,
-    driver.totalDuration
-  );
+  // Get the coordinates from the route
+  const coordinates = driver.route.geometry.coordinates;
+  const startCoords = coordinates[0];
+  const endCoords = coordinates[coordinates.length - 1];
+
+  let currentPosition;
+  if (driver.completed) {
+    // If delivery is completed, use destination coordinates
+    currentPosition = {
+      lat: endCoords[1],
+      lng: endCoords[0],
+      progress: 100,
+      status: "completed",
+      currentStep: driver.route.properties.segments[0].steps.length,
+      totalSteps: driver.route.properties.segments[0].steps.length,
+      address: driver.endLocation,
+      timeLeft: "0 minutes",
+    };
+  } else {
+    currentPosition = calculateCurrentPosition(
+      driver.route,
+      driver.startTime,
+      driver.totalDuration
+    );
+  }
 
   // If position indicates completion, update driver state
   if (currentPosition.status === "completed" && !driver.completed) {
     driver.completed = true;
+    // Update position to use destination coordinates
+    currentPosition = {
+      lat: endCoords[1],
+      lng: endCoords[0],
+      progress: 100,
+      status: "completed",
+      currentStep: driver.route.properties.segments[0].steps.length,
+      totalSteps: driver.route.properties.segments[0].steps.length,
+      address: driver.endLocation,
+      timeLeft: "0 minutes",
+    };
   }
+
+  // Extract waypoints from the route steps
+  const waypoints = driver.route.properties.segments[0].steps.map((step) => ({
+    location: step.name,
+    instruction: step.instruction,
+    distance: step.distance,
+    duration: step.duration,
+    coordinates: driver.route.geometry.coordinates.slice(
+      step.way_points[0],
+      step.way_points[1] + 1
+    ),
+  }));
 
   return res.json({
     id: courierId,
@@ -75,19 +118,19 @@ async function getCourier(req, res) {
       currentStep: currentPosition.currentStep,
       totalSteps: currentPosition.totalSteps,
       address: currentPosition.address || null,
-      timeLeft:
-        currentPosition.status === "completed"
-          ? "0 minutes"
-          : currentPosition.timeLeft,
+      timeLeft: currentPosition.timeLeft,
     },
     routeInfo: {
       startAddress: driver.startLocation,
       endAddress: driver.endLocation,
+      startCoords: [startCoords[1], startCoords[0]], // Convert from [lon, lat] to [lat, lon]
+      endCoords: [endCoords[1], endCoords[0]], // Convert from [lon, lat] to [lat, lon]
       totalDistance:
         Math.round(driver.route.properties.segments[0].distance / 1000) + " km",
       totalDuration:
         Math.round(driver.route.properties.segments[0].duration / 60) +
         " minutes",
+      waypoints: waypoints,
     },
   });
 }
@@ -115,6 +158,12 @@ async function createOrder(req, res) {
           api_key: process.env.OPENROUTE_API_KEY,
           start: `${fromCoords.lon},${fromCoords.lat}`,
           end: `${toCoords.lon},${toCoords.lat}`,
+          alternatives: false,
+          instructions: true,
+          geometry_simplify: false,
+          continue_straight: true,
+          roundabout_exits: true,
+          preference: "recommended",
         },
       });
 
@@ -144,6 +193,18 @@ async function createOrder(req, res) {
       endLocation: to,
       completed: false,
     });
+
+    // Extract waypoints from the route steps
+    const waypoints = routeData.properties.segments[0].steps.map((step) => ({
+      location: step.name,
+      instruction: step.instruction,
+      distance: step.distance,
+      duration: step.duration,
+      coordinates: routeData.geometry.coordinates.slice(
+        step.way_points[0],
+        step.way_points[1] + 1
+      ),
+    }));
 
     return res.json({
       id: driverId,
