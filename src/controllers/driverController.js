@@ -44,7 +44,7 @@ async function retryOperation(operation, retryLimit = RETRY_LIMIT) {
   throw lastError;
 }
 
-async function getDriver(req, res) {
+async function getCourier(req, res) {
   const { driverId } = req.params;
   const driver = activeDrivers.get(driverId);
 
@@ -184,6 +184,6 @@ async function geocodeAddress(address) {
 }
 
 module.exports = {
-  getDriver,
+  getCourier,
   createOrder,
 };
