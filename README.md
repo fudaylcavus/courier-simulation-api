@@ -1,26 +1,10 @@
 # Courier Simulation API
 
-🚚 A real-time courier simulation API for testing delivery applications. Simulates courier movements with real street navigation, live tracking, and accurate ETAs.
-
-[![Node.js](https://img.shields.io/badge/Node.js-43853D?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
-[![Express.js](https://img.shields.io/badge/Express.js-404D59?style=flat&logo=express&logoColor=white)](https://expressjs.com/)
-[![OpenRoute Service](https://img.shields.io/badge/OpenRoute-Service-blue?style=flat)](https://openrouteservice.org/)
-
-## Overview
-
 A powerful API for simulating courier delivery operations with real-time tracking and route simulation. Perfect for testing delivery applications, this API provides realistic courier movements along actual city routes using OpenRoute Service for accurate street-level navigation.
 
-### Why Use This?
-- 🔄 Test your delivery app without real couriers
-- 📍 Real street-level navigation and addresses
-- ⏱️ Accurate ETAs and distance calculations
-- 🚗 Simulated courier movements (20x speed)
-- 🗺️ Powered by OpenRoute Service
-- 🔌 Simple REST API interface
-
 ## Key Features
-- Live courier position simulation
-- Real-time ETA and progress tracking
+- Real-time courier position simulation based on elapsed time
+- Time-based movement along actual street routes
 - Street-level navigation and addressing
 - Automatic courier assignment
 - Configurable simulation speed (20x faster)
@@ -154,8 +138,16 @@ Example Response:
 }
 ```
 
+## How Simulation Works
+- When an order is created, a courier is assigned and starts moving immediately
+- Courier position is calculated based on elapsed time since order creation
+- Movement speed is 20x faster than real-time for testing purposes
+- Position updates are calculated in real-time when requested
+- Once a courier reaches their destination, their position remains fixed
+- Each request returns the current position based on time elapsed, not step-by-step movement
+
 ## Notes
 - The simulation runs 20x faster than real-time for testing purposes
-- Position updates automatically with each request
+- Position is calculated based on elapsed time since order creation
 - Address information is provided by OpenRoute Service
-- Time left is calculated based on the simulation speed 
+- Time left is calculated based on the simulation speed and elapsed time 
