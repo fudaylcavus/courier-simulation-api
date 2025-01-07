@@ -1,8 +1,9 @@
-# Courier Simulation API
+# Courier Simulation API 🚚
 
 A powerful API for simulating courier delivery operations with real-time tracking and route simulation. Perfect for testing delivery applications, this API provides realistic courier movements along actual city routes using OpenRoute Service for accurate street-level navigation.
 
-## Key Features
+## 🌟 Key Features
+
 - Real-time courier position simulation based on elapsed time
 - Time-based movement along actual street routes
 - Street-level navigation and addressing
@@ -11,19 +12,26 @@ A powerful API for simulating courier delivery operations with real-time trackin
 - Real-world route generation
 - Persistent courier state tracking
 
-## Setup
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js installed
+- OpenRoute Service API key
+
+### Setup
 
 1. Install dependencies:
-```bash
-npm install
-```
+   ```bash
+   npm install
+   ```
 
 2. Create a `.env` file in the root directory and add your OpenRoute Service API key:
-```
-OPENROUTE_API_KEY=your_api_key_here
-```
+   ```
+   OPENROUTE_API_KEY=your_api_key_here
+   ```
 
-## Running the Server
+### Running the Server
 
 Development mode with auto-reload:
 ```bash
@@ -35,14 +43,14 @@ Production mode:
 npm start
 ```
 
-## API Endpoints
+## 📚 API Documentation
 
 ### 1. Get Courier Information
-```
+```http
 GET /couriers/:courierId
 ```
 
-#### Response Type
+#### Response
 ```typescript
 {
   id: string;
@@ -68,11 +76,11 @@ GET /couriers/:courierId
 ```
 
 ### 2. Create New Order
-```
+```http
 POST /order
 ```
 
-#### Request Type
+#### Request Body
 ```typescript
 {
   from: string;  // pickup address
@@ -80,7 +88,7 @@ POST /order
 }
 ```
 
-#### Response Type
+#### Response
 ```typescript
 {
   id: string;
@@ -96,9 +104,9 @@ POST /order
 }
 ```
 
-## Example Usage
+## 💡 Example Usage
 
-1. Create a new delivery order:
+### Creating a New Delivery Order
 ```bash
 curl -X POST http://localhost:3000/order \
   -H "Content-Type: application/json" \
@@ -108,7 +116,7 @@ curl -X POST http://localhost:3000/order \
   }'
 ```
 
-2. Track courier position:
+### Tracking Courier Position
 ```bash
 curl http://localhost:3000/couriers/COURIER_ID
 ```
@@ -138,16 +146,39 @@ Example Response:
 }
 ```
 
-## How Simulation Works
-- When an order is created, a courier is assigned and starts moving immediately
-- Courier position is calculated based on elapsed time since order creation
-- Movement speed is 20x faster than real-time for testing purposes
-- Position updates are calculated in real-time when requested
-- Once a courier reaches their destination, their position remains fixed
-- Each request returns the current position based on time elapsed, not step-by-step movement
+## 🔄 How Simulation Works
 
-## Notes
-- The simulation runs 20x faster than real-time for testing purposes
-- Position is calculated based on elapsed time since order creation
-- Address information is provided by OpenRoute Service
-- Time left is calculated based on the simulation speed and elapsed time 
+The simulation engine provides a realistic delivery experience with the following features:
+- Automatic courier assignment and immediate movement upon order creation
+- Position calculation based on elapsed time since order creation
+- Accelerated simulation (20x faster than real-time) for testing
+- Real-time position updates on request
+- Fixed position once destination is reached
+- Time-based position calculation rather than step-by-step movement
+
+## 🖥️ Client Application
+
+The project includes a modern web client for easy interaction with the courier simulation API.
+
+### Tracking Form
+A clean, user-friendly interface for:
+- Submitting tracking IDs
+- Viewing delivery status and progress
+
+![Tracking Form](./tracking-form.png)
+
+### Tracking Details View
+A comprehensive tracking dashboard showing:
+- Real-time courier position on an interactive map
+- Detailed delivery progress information
+- Current street location and time estimates
+- Complete route overview with distance and duration
+
+![Tracking Details](./tracking-details.png)
+
+## 📝 Technical Notes
+
+- Simulation runs at 20x real-time speed for testing efficiency
+- Position calculations are based on order creation timestamp
+- Address data is powered by OpenRoute Service
+- Time estimates account for simulation speed multiplier 
