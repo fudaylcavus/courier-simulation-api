@@ -1,7 +1,7 @@
 const { getDriver, createOrder } = require('./controllers/driverController');
 
 function setupRoutes(app) {
-  app.get('/drivers/:driverId', getDriver);
+  app.get('/couriers/:courierId', getCourier);
   app.post('/order', createOrder);
 }
 
