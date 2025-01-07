@@ -8,7 +8,7 @@ const GEOCODE_API_URL = "https://api.openrouteservice.org/geocode/search";
 const activeDrivers = new Map();
 const RETRY_LIMIT = 3;
 const RETRY_DELAY = 1000; // 1 second
-const SIMULATION_SPEED = 20; // 20x faster
+const SIMULATION_SPEED = parseInt(process.env.SIMULATION_SPEED || "20", 10); // Default to 20x faster if not set
 
 // Dummy driver names and license plates for simulation
 const driverPool = [
@@ -45,8 +45,8 @@ async function retryOperation(operation, retryLimit = RETRY_LIMIT) {
 }
 
 async function getCourier(req, res) {
-  const { driverId } = req.params;
-  const driver = activeDrivers.get(driverId);
+  const { courierId } = req.params;
+  const driver = activeDrivers.get(courierId);
 
   if (!driver) {
     return res.status(404).json({ error: "Driver not found" });
@@ -64,7 +64,7 @@ async function getCourier(req, res) {
   }
 
   return res.json({
-    id: driverId,
+    id: courierId,
     name: driver.name,
     licensePlate: driver.licensePlate,
     status: currentPosition.status,
