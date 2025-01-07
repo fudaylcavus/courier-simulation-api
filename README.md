@@ -12,7 +12,27 @@ A powerful API for simulating courier delivery operations with real-time trackin
 - Real-world route generation
 - Persistent courier state tracking
 
-## 🚀 Getting Started
+## 🚀️ Client Application
+
+The project includes a modern web client for easy interaction with the courier simulation API.
+
+### Tracking Form
+A clean, user-friendly interface for:
+- Submitting tracking IDs
+- Viewing delivery status and progress
+
+![Tracking Form](./tracking-form.png)
+
+### Tracking Details View
+A comprehensive tracking dashboard showing:
+- Real-time courier position on an interactive map
+- Detailed delivery progress information
+- Current street location and time estimates
+- Complete route overview with distance and duration
+
+![Tracking Details](./tracking-details.png)
+
+## 📝 Getting Started
 
 ### Prerequisites
 
@@ -155,26 +175,6 @@ The simulation engine provides a realistic delivery experience with the followin
 - Real-time position updates on request
 - Fixed position once destination is reached
 - Time-based position calculation rather than step-by-step movement
-
-## 🖥️ Client Application
-
-The project includes a modern web client for easy interaction with the courier simulation API.
-
-### Tracking Form
-A clean, user-friendly interface for:
-- Submitting tracking IDs
-- Viewing delivery status and progress
-
-![Tracking Form](./tracking-form.png)
-
-### Tracking Details View
-A comprehensive tracking dashboard showing:
-- Real-time courier position on an interactive map
-- Detailed delivery progress information
-- Current street location and time estimates
-- Complete route overview with distance and duration
-
-![Tracking Details](./tracking-details.png)
 
 ## 📝 Technical Notes
 
